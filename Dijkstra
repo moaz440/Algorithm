@@ -1,0 +1,78 @@
+#include<stdio.h>
+#include<conio.h>
+#define OO 1000000
+#define MAX 100
+void dijkstra(int Star_Sys[MAX][MAX],int n,int Snode);
+int main()
+{
+	int Star_Sys[MAX][MAX],i,j,n,Start;
+	printf("Enter Number of planets:");
+	scanf("%d",&n);
+	printf("\nEnter the star system:\n");
+
+	for(i=0;i<n;i++)
+		for(j=0;j<n;j++)
+			scanf("%d",&Star_Sys[i][j]);
+	printf("\nEnter the starting planet:");
+	scanf("%d",&Start);
+	dijkstra(Star_Sys,n,Start);
+
+	return 0;
+}
+
+void dijkstra(int Star_Sys[MAX][MAX],int n,int Snode)
+{
+	int cost[MAX][MAX],Time[MAX],pred[MAX];
+	int visited[MAX],count,minTime,nextnode,i,j;
+
+	for(i=0;i<n;i++)
+		for(j=0;j<n;j++)
+			if(Star_Sys[i][j]==0)
+				cost[i][j]=OO;
+			else
+				cost[i][j]=Star_Sys[i][j];
+	for(i=0;i<n;i++)
+	{
+		Time[i]=cost[Snode][i];
+		pred[i]=Snode;
+		visited[i]=0;
+	}
+	Time[Snode]=0;
+	visited[Snode]=1;
+	count=1;
+
+	while(count<n-1)
+	{
+		minTime=OO;
+
+		for(i=0;i<n;i++)
+			if(Time[i]<minTime&&!visited[i])
+			{
+				minTime=Time[i];
+				nextnode=i;
+			}
+
+			visited[nextnode]=1;
+			for(i=0;i<n;i++)
+				if(!visited[i])
+					if(minTime+cost[nextnode][i]<Time[i])
+					{
+						Time[i]=minTime+cost[nextnode][i];
+						pred[i]=nextnode;
+					}
+		count++;
+	}
+
+	for(i=0;i<n;i++)
+		if(i!=Snode && Time[i]!= OO)
+		{
+			printf("\nthen the shortest time to reach planet %d= %d",i,Time[i]);
+			printf("\nPath= %d",i);
+			j=i;
+			do
+			{
+				j=pred[j];
+				printf(" <- %d ",j);
+			}while(j!=Snode);
+	}
+}
